@@ -1,0 +1,36 @@
+{
+    "name": "FB Automation",
+    "version": "1.0",
+    "description": "Automate your facebook actions",
+    "icons": {
+        "128": "automate-fb.png"
+    },
+    "browser_action":{
+        "default_title": "FB Automation",
+        "default_popup": "popup.html"
+    },
+    "content_scripts": [
+        {
+            "matches": ["*://*.facebook.com/groups/*"],
+            "js": [
+                "jquery.min.js",
+                "assets/jquery.toast.min.js",
+                "content.js"
+            ],
+            "css": [
+                "content.inj.css",
+                "assets/jquery.toast.min.css"
+            ]
+        }
+    ],
+    "background": {
+        "scripts": ["background.js"]
+    },
+    "permissions": [
+        "tabs",
+        "*://*.facebook.com/*", 
+        "storage", 
+        "activeTab"
+    ],
+    "manifest_version": 2
+  }

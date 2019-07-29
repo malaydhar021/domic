@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <link rel="stylesheet" href="./assets/bootstrap.min.css">
+  <link rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/open-iconic/1.1.1/font/css/open-iconic-bootstrap.css" />
+  <link href="./assets/bootstrap-tagsinput.css" rel="stylesheet" type="text/css">
+  <!-- Scripts -->
+  <script src="./jquery.min.js"></script>
+  <script src="./assets/bootstrap.min.js"></script>
+  <script src="./assets/bootstrap-tagsinput.min.js"></script>
+  <script lang="javascript" src="./popup.js"></script>
+  <style>
+    body {
+      padding-top: 5rem;
+      min-width: 300px;
+      max-height: 500px;
+      overflow: auto;
+    }
+
+    .starter-template {
+      padding: 0 0.5rem 3rem 0.5rem;
+    }
+
+    .error {
+      border: 2px solid #f00;
+    }
+    .msg {
+      color: #F00;
+    }
+  </style>
+</head>
+
+<body>
+
+  <nav class="navbar navbar-dark bg-dark fixed-top">
+    <a class="navbar-brand" href="#">Facebook Automation</a>
+  </nav>
+
+  <div class="container">
+
+    <div class="starter-template">
+      <form>
+        <div class="form-group">
+          <label for="numberofrequests">Look up Interval</label>
+          <!-- <input type="number" class="form-control" id="sendRQInput" placeholder="Number of Requests"> -->
+          <select id="interval" name="interval" class="form-control interval">
+            <option value="5000" selected>Auto (5 Seconds Interval)</option>
+            <option value="15000">15 Sec.</option>
+            <option value="30000">30 Sec.</option>
+            <option value="60000">1 Mins.</option>
+            <option value="180000">3 Mins.</option>
+            <option value="300000">5 Mins.</option>
+            <option value="600000">10 Mins.</option>
+            <option value="900000">15 Mins.</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="numberofrequests">Requests Limit</label>
+          <div>
+            <div class="form-check form-check-inline">
+              <input class="form-check-input reqType" type="radio" name="reqType" id="reqType_l" value="1" checked>
+              <label class="form-check-label" for="inlineRadio1">Limited</label>
+            </div>
+            <div class="form-check form-check-inline">
+              <input class="form-check-input reqType" type="radio" name="reqType" id="reqType_i" value="0">
+              <label class="form-check-label" for="inlineRadio2">Infinite</label>
+            </div>
+          </div>
+        </div>
+        <div class="form-group noOfReqBlock">
+          <label for="numberofrequests">Number of Requests</label>
+          <input type="number" class="form-control numberOfReq" name="numberOfReq" id="numberOfReq"
+            placeholder="Number of Requests">
+          <small class="nqMsg msg" style="display: none;">Please input number of requests</small>
+        </div>
+        <div class="form-group">
+          <label for="keywords">Keywords</label>
+          <input type="text" class="form-control" id="tagInput" name="keywords" data-role="tagsinput"
+            placeholder="Keywords" />
+          <small class="kwMsg msg" style="display: none;">Keywords can not be empty</small>
+        </div>
+        <div class="form-group">
+          <!-- <div class="col-sm-10"> -->
+          <button type="submit" id="sendRQBtn" class="btn btn-primary btn-small" title="Run the Script"><i
+              class="oi oi-play-circle"></i> Run</button>
+          <button type="button" id="stopScript" class="btn btn-danger btn-small" title="Stop running Script"><i
+              class="oi oi-media-stop"></i> Stop</button>
+          <button type="button" id="loadFormData" class="btn btn-info btn-small" title="Load previous data"><i
+              class="oi oi-reload"></i> Load</button>
+          <!-- </div> -->
+        </div>
+      </form>
+    </div>
+
+  </div><!-- /.container -->
+</body>
+
+</html>
