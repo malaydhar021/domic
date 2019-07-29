@@ -1,7 +1,7 @@
 {
     "name": "FB Automation",
     "version": "1.0",
-    "description": "Automate your facebook actions",
+    "description": "Search and send friend requests to any group members based on your keywords match",
     "icons": {
         "128": "automate-fb.png"
     },
@@ -12,15 +12,9 @@
     "content_scripts": [
         {
             "matches": ["*://*.facebook.com/groups/*"],
-            "js": [
-                "jquery.min.js",
-                "assets/jquery.toast.min.js",
-                "content.js"
-            ],
-            "css": [
-                "content.inj.css",
-                "assets/jquery.toast.min.css"
-            ]
+            "js": ["jquery.min.js","assets/jquery.toast.min.js","content.inj.js"],
+            "css": ["content.inj.css","assets/jquery.toast.min.css"],
+            "run_at": "document_end"
         }
     ],
     "background": {

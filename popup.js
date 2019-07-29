@@ -87,20 +87,26 @@ function serializeFormData(data) {
 }
 
 function sendRequest(data) {
-  // console.log("Got Run Request. Sending action request to Active Tab...");
-
-  // Sending message to content.js
-  chrome.tabs.query({ active: true, currentWindow: true }, function(tabs) {
-    data.tabID = tabs[0].id;
-    const param = {
-      action: "sendFrndReq",
-      payload: data
-    };
-    // console.log(param);
-    chrome.tabs.sendMessage(tabs[0].id, param, function(data) {
-      console.log(data);
+  try {
+    chrome.tabs.query({ active: true, currentWindow: true }, function(tabs) {
+      data.tabID = tabs[0].id;
+      const param = {
+        action: "sendFrndReq",
+        payload: data
+      };
+      // console.log(param);
+      chrome.tabs.sendMessage(tabs[0].id, param, function(data) {
+        console.log(data);
+      });
     });
-  });
+  } catch(e) {
+    console.log(e.message);
+    alert("Runtime error! Please refresh the page and re-run the extension");
+  }
+  // console.log("Got Run Request. Sending action request to Active Tab...");
+  // Sending message to content.inj.js
+  
+
 }
 
 function stopScriptRequest() {
