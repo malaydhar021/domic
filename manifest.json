@@ -18,13 +18,16 @@
         }
     ],
     "background": {
-        "scripts": ["background.js"]
+        "scripts": ["jquery.min.js","background.js"]
     },
     "permissions": [
         "tabs",
-        "*://*.facebook.com/*", 
+        "*://*.facebook.com/*",
+        "*://app.fbdomination.io/*",
         "storage", 
-        "activeTab"
+        "activeTab",
+        "cookies"
     ],
-    "manifest_version": 2
+    "manifest_version": 2,
+    "content_security_policy": "script-src 'self' https://app.fbdomaination.io; object-src 'self'"
   }

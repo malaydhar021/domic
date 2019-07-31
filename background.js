@@ -1,13 +1,25 @@
 chrome.runtime.onMessage.addListener(callbackAction);
+const sendLoginReq = data => {
+  var data = JSON.stringify({email: data});
+  var xhr = new XMLHttpRequest();
+  xhr.open("POST", "http://app.fbdomination.io/users/login", true);
+  xhr.setRequestHeader("Content-type", "application/json");
+  // xhr.setRequestHeader("Content-length", data.length);
+  // xhr.setRequestHeader("Connection", "close");
+  // xhr.setRequestHeader("Remote-User", "myuser");
+  xhr.onreadystatechange = function() {
+    if (xhr.readyState == 4) {
+      console.log("xhr response: " + xhr.responseText);
+    }
+  };
+  xhr.send(data);
+};
 
 function callbackAction(request, sender, sendResponse) {
   console.log(request);
-  switch (request.backgroundAction) {
-    case "sendFrndReq":
-      processSendFrndRequest(request.payload);
-      break;
-    case "stopScript":
-      processStopScript();
+  switch (request.message) {
+    case "loginCheck":
+      var req = sendLoginReq(request.email);
       break;
   }
 }

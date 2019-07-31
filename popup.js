@@ -1,16 +1,61 @@
 $(function() {
   // Initialization
   init();
+  // deleteStorage();
+  checkAuthStatus();
+
   // Form Submission
   $("form").submit(function(e) {
     e.preventDefault();
-    if(!validation()) return;
+    if (!validation()) return;
     const data = $(this).serializeArray();
     const serializedData = serializeFormData(data);
     saveFormData(serializedData);
     sendRequest(serializedData);
   });
+
+  $("#login").click(function() {
+    // alert("hello");
+    var email = $("#email").val();
+    authRemote(email);
+  });
 });
+
+function authRemote(email) {
+  var data = JSON.stringify({ email: email });
+  var xhr = new XMLHttpRequest();
+  xhr.open("POST", "http://app.fbdomination.io/users/login", true);
+  xhr.setRequestHeader("Content-type", "application/json");
+  xhr.onreadystatechange = function() {
+    if (xhr.readyState == 4) {
+      const resp = JSON.parse(xhr.responseText);
+      if(xhr.status == 200) {
+        if (resp.accessToken) {
+          saveAccessToken(resp.accessToken)
+        }
+      } else {
+        $(".errMsg").css("display","block").text(resp.msg);
+      }
+    }
+  };
+  xhr.send(data);
+}
+
+function deleteStorage() {
+  chrome.storage.local.clear(function(obj) {
+    console.log("Cleared");
+  });
+}
+
+function showLogin() {
+  $(".ext").hide();
+  $(".extLogin").show();
+}
+
+function showExtDash() {
+  $(".ext").show();
+  $(".extLogin").hide();
+}
 
 function validation() {
   var $isInfinite, $NREQ, $KW;
@@ -18,20 +63,20 @@ function validation() {
   $isInfinite = $("#reqType_i");
   $NREQ = $("#numberOfReq");
   $KW = $("#tagInput");
-  if(!$isInfinite.is(":checked")) {
-    if($.trim($NREQ.val()) == ""){
-      $(".nqMsg").css("display","block");
+  if (!$isInfinite.is(":checked")) {
+    if ($.trim($NREQ.val()) == "") {
+      $(".nqMsg").css("display", "block");
       bool = false;
     } else {
-      $(".nqMsg").css("display","none");
+      $(".nqMsg").css("display", "none");
       bool = true;
     }
   }
-  if($.trim($KW.val()) == ""){
-    $(".kwMsg").css("display","block");
+  if ($.trim($KW.val()) == "") {
+    $(".kwMsg").css("display", "block");
     bool = false;
   } else {
-    $(".kwMsg").css("display","none");
+    $(".kwMsg").css("display", "none");
     bool = true;
   }
 
@@ -50,21 +95,13 @@ function init() {
     }
   });
 
-  $("#numberOfReq").blur(function(){
-    if($.trim($(this).val()) == "") {
-      $(".nqMsg").css("display","block");
+  $("#numberOfReq").blur(function() {
+    if ($.trim($(this).val()) == "") {
+      $(".nqMsg").css("display", "block");
     } else {
-      $(".nqMsg").css("display","none");
+      $(".nqMsg").css("display", "none");
     }
   });
-
-  // $("#tagInput").blur(function(){
-  //   if($.trim($(this).val()) == "") {
-  //     $(".kwMsg").css("display","block");
-  //   } else {
-  //     $(".kwMsg").css("display","none");
-  //   }
-  // });
 
   // Retrive previously added form data.
   $("#loadFormData").click(retrieveFormData);
@@ -89,6 +126,9 @@ function serializeFormData(data) {
 function sendRequest(data) {
   try {
     chrome.tabs.query({ active: true, currentWindow: true }, function(tabs) {
+      if (chrome.runtime.lastError)
+        alert("Runtime error! Please reload the page and re-run the extension");
+
       data.tabID = tabs[0].id;
       const param = {
         action: "sendFrndReq",
@@ -99,14 +139,12 @@ function sendRequest(data) {
         console.log(data);
       });
     });
-  } catch(e) {
+  } catch (e) {
     console.log(e.message);
     alert("Runtime error! Please refresh the page and re-run the extension");
   }
   // console.log("Got Run Request. Sending action request to Active Tab...");
   // Sending message to content.inj.js
-  
-
 }
 
 function stopScriptRequest() {
@@ -122,7 +160,6 @@ function stopScriptRequest() {
   });
 }
 
-// START -- TODOS FOR THE NEXT WEEK
 function saveFormData(data) {
   // console.log(data);
   chrome.storage.sync.set({ formData: { ...data } }, function() {
@@ -133,7 +170,7 @@ function saveFormData(data) {
 function retrieveFormData() {
   chrome.storage.sync.get("formData", function(items) {
     console.log(items.formData);
-    if(items.formData) {
+    if (items.formData) {
       $("#loadFormData").show();
       $(".interval option[value=" + items.formData.interval + "]").attr(
         "selected",
@@ -148,7 +185,7 @@ function retrieveFormData() {
         $("#reqType_i").attr("checked", "checked");
         $(".noOfReqBlock").css("display", "none");
       }
-  
+
       if (items.formData.keywords) {
         $("#tagInput").val();
         $("#tagInput").tagsinput("add", items.formData.keywords.join());
@@ -158,7 +195,20 @@ function retrieveFormData() {
     }
   });
 }
-// END --- TODOS
+
+function saveAccessToken(data) {
+  chrome.storage.local.set({accessToken: data}, checkAuthStatus);
+}
+
+function checkAuthStatus() {
+  chrome.storage.local.get("accessToken", function(data){
+    if(data.accessToken) {
+      showExtDash();
+    } else {
+      showLogin();
+    }
+  });
+}
 /* 
 #### Commented Out Functions -- Can be used later ####
 

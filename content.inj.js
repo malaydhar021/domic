@@ -73,8 +73,8 @@ function checkSendFriend(el, data) {
         // $(btn).css("background-color","red");
         if(!$(btn).hasClass("hidden_elem")) {
           console.log("Request outgoing button is not there. Sending Friend Request");
-          $(btn).css("background-color","blue");
-          // $(btn).click();
+          // $(btn).css("background-color","blue");
+          $(btn).click();
           requestSent++;
           toastMessage("Success",requestSent+" requests sent. Looking for next...");
         } else {
